@@ -54,25 +54,46 @@ function renderSystemStats(stats) {
 function renderTasks(tasks) {
     const container = document.getElementById("tasks-container");
 
-    if (tasks === null) {
-        container.innerHTML = `<li style="color: var(--status-stopped); list-style: none;">Failed to load tasks.</li>`;
+    if (tasks === null || tasks.length === 0) {
+        const message = document.createElement("li");
+        message.textContent = tasks === null ? "Failed to load tasks" : "No tasks left";
+        message.style.color = tasks === null ? "var(--status-stopped)" : "var(--text-muted)";
+        message.style.listStyle = "none";
+        container.replaceChildren(message);
         return;
     }
 
-    if (tasks.length === 0) {
-        container.innerHTML = `<li style="color: var(--text-muted); list-style: none;">No tasks left.</li>`;
-        return;
-    }
+    const rows = tasks.map(task => {
+        const row = document.createElement("li");
+        row.classList.add("task-item");
+        row.dataset.id = task.id;
 
-    container.innerHTML = tasks.map(task => `
-        <li class="task-item" data-id="${task.id}">
-            <div class="task-content">
-                <input type="checkbox" class="toggle-checkbox" ${task.completed ? "checked" : ""}>
-                <span class="task-text ${task.completed ? "task-completed" : ""}">${task.text}</span>
-            </div>
-            <button class="delete-btn">X</button>
-        </li>
-    `).join("");
+        const content = document.createElement("div");
+        content.classList.add("task-content");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.classList.add("toggle-checkbox");
+        checkbox.checked = task.completed;
+
+        const text = document.createElement("span");
+        text.classList.add("task-text");
+        if (task.completed) {
+            text.classList.add("task-completed");
+        }
+        text.textContent = task.text;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.textContent = "X";
+
+        content.append(checkbox, text);
+        row.append(content, deleteBtn);
+
+        return row;
+    });
+
+    container.replaceChildren(...rows);
 }
 
 window.ui = {
