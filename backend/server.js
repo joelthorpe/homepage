@@ -108,6 +108,48 @@ app.patch("/api/todos/:id/toggle", (req, res) => {
     }
 });
 
+app.get("/api/weather", async (req, res) => {
+    const city = req.query.city || "London";
+    try {
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
+
+        if (!geoRes.ok) throw new Error("Geocoding API error");
+        const geoData = await geoRes.json();
+
+        if (!geoData.results || geoData.results.length === 0) {
+            return res.status(404).json({ error: "City not found" });
+        }
+
+        const { latitude, longitude, name, country } = geoData.results[0];
+
+        // weather_code for icons, temperature_2m for current temp
+        // daily for max/min, sunrise, sunset
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
+
+        const weatherRes = await fetch(weatherUrl);
+        if (!weatherRes.ok) throw new Error("Weather API error");
+
+        const weatherData = await weatherRes.json();
+
+        res.json({
+            location: `${name}, ${country}`,
+            current: {
+                temp: weatherData.current.temperature_2m,
+                code: weatherData.current.weather_code
+            },
+            daily: {
+                max: weatherData.daily.temperature_2m_max[0],
+                min: weatherData.daily.temperature_2m_min[0],
+                sunrise: weatherData.daily.sunrise[0],
+                sunset: weatherData.daily.sunset[0]
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching weather info:", error);
+        res.status(500).json({ error: "Failed to fetch weather info" });
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

@@ -63,10 +63,34 @@ async function toggleTask(id) {
     }
 }
 
+async function getWeather(city = "London") {
+    try {
+        const response = await fetch(`${API_BASE}/weather?city=${encodeURIComponent(city)}`);
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to fetch weather:", error);
+        return null;
+    }
+}
+
+async function getWeatherCodes() {
+    try {
+        const response = await fetch('/data/wmo_codes.json');
+        if (!response.ok) throw new Error(`Fetch error: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to fetch weather codes:", error);
+        return null;
+    }
+}
+
 window.api = {
     getSystemInfo,
     getTasks,
     addTask,
     deleteTask,
-    toggleTask
+    toggleTask,
+    getWeather,
+    getWeatherCodes
 };

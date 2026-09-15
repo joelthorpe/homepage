@@ -96,7 +96,108 @@ function renderTasks(tasks) {
     container.replaceChildren(...rows);
 }
 
+function getWeatherInfo(code, mapping, isDay = true) {
+    const defaultInfo = { description: "Unknown", image: "" };
+    if (!mapping) return defaultInfo;
+    const timeOfDay = isDay ? "day" : "night";
+
+    return mapping?.[code]?.[timeOfDay] || defaultInfo;
+}
+
+function renderWeather(weather, city, mapping) {
+    const container = document.getElementById("weather-widget");
+
+    const locationForm = document.createElement("form");
+    locationForm.id = "weather-location-form";
+
+    const locationInput = document.createElement("input");
+    locationInput.id = "weather-location-input";
+    locationInput.type = "text";
+    locationInput.value = city;
+
+    const saveButton = document.createElement("button");
+    saveButton.type = "submit";
+    saveButton.textContent = "Save";
+    saveButton.classList.add("weather-save-btn");
+
+    locationForm.append(locationInput, saveButton);
+
+    if (!weather) {
+        const message = document.createElement("p");
+        message.textContent = "Failed to load weather";
+        message.style.color = "var(--status-stopped)";
+        message.style.listStyle = "none";
+
+        locationForm.style.display = "flex";
+        container.replaceChildren(locationForm, message);
+        return;
+    }
+
+    const { location, current, daily } = weather;
+
+    const now = Date.now();
+    const sunrise = new Date(daily.sunrise).getTime();
+    const sunset = new Date(daily.sunset).getTime();
+    const isDay = now >= sunrise && now <= sunset;
+
+    const info = getWeatherInfo(current.code, mapping, isDay);
+
+    const locationDisplay = document.createElement("div");
+    locationDisplay.id = "weather-location-display";
+
+    const locationText = document.createElement("span");
+    locationText.textContent = location;
+    locationText.classList.add("weather-location-text");
+
+    const editButton = document.createElement("button");
+    editButton.id = "edit-location-btn";
+    editButton.type = "button";
+    editButton.textContent = "[ edit ] ";
+
+    locationDisplay.append(locationText, editButton);
+
+    const details = document.createElement("div");
+    details.classList.add("weather-details");
+
+    const icon = document.createElement("img");
+    if (info.image) {
+        icon.src = info.image;
+    } else {
+        icon.hidden = true;
+    }
+    icon.alt = info.description;
+    icon.width = 50;
+    icon.height = 50;
+
+    const conditions = document.createElement("div");
+
+    const temperature = document.createElement("div");
+    temperature.textContent = `${current.temp}°C`;
+    temperature.classList.add("weather-temp");
+
+    const description = document.createElement("div");
+    description.textContent = info.description;
+    description.classList.add("weather-desc");
+
+    conditions.append(temperature, description);
+
+    const range = document.createElement("div");
+    range.classList.add("weather-range");
+
+    const high = document.createElement("div");
+    high.textContent = `H: ${daily.max}°C`;
+
+    const low = document.createElement("div");
+    low.textContent = `L: ${daily.min}°C`;
+
+    range.append(high, low);
+    details.append(icon, conditions, range);
+
+    container.replaceChildren(locationDisplay, locationForm, details);
+}
+
 window.ui = {
     renderSystemStats,
-    renderTasks
+    renderTasks,
+    renderWeather
 };
