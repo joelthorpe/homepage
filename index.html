@@ -11,8 +11,12 @@
 <body>
     <header class="dashboard-header">
         <h1>Homepage</h1>
-        <div id="stats-widget" class="dashboard-header-widget"></div>
-        <div id="weather-widget" class="dashboard-header-widget"></div>
+        <div class="header-widgets">
+            <div id="stats-widget" class="dashboard-header-widget">
+                <div id="stats">Loading system info...</div>
+            </div>
+            <div id="weather-widget" class="dashboard-header-widget"></div>
+        </div>
     </header>
 
     <main class="dashboard-grid">
@@ -30,6 +34,10 @@
             </form>
         </section>
     </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
