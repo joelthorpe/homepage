@@ -51,6 +51,31 @@ function renderSystemStats(stats) {
     `;
 }
 
+function renderTasks(tasks) {
+    const container = document.getElementById("tasks-container");
+
+    if (tasks === null) {
+        container.innerHTML = `<li style="color: var(--status-stopped); list-style: none;">Failed to load tasks.</li>`;
+        return;
+    }
+
+    if (tasks.length === 0) {
+        container.innerHTML = `<li style="color: var(--text-muted); list-style: none;">No tasks left.</li>`;
+        return;
+    }
+
+    container.innerHTML = tasks.map(task => `
+        <li class="task-item" data-id="${task.id}">
+            <div class="task-content">
+                <input type="checkbox" class="toggle-checkbox" ${task.completed ? "checked" : ""}>
+                <span class="task-text ${task.completed ? "task-completed" : ""}">${task.text}</span>
+            </div>
+            <button class="delete-btn">X</button>
+        </li>
+    `).join("");
+}
+
 window.ui = {
-    renderSystemStats
+    renderSystemStats,
+    renderTasks
 };

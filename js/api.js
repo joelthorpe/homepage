@@ -11,6 +11,62 @@ async function getSystemInfo() {
     }
 }
 
+async function getTasks() {
+    try {
+        const response = await fetch(`${API_BASE}/todos`);
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to fetch tasks:", error);
+        return null;
+    }
+}
+
+async function addTask(text) {
+    try {
+        const response = await fetch(`${API_BASE}/todos`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text })
+        });
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to add task:", error);
+        return null;
+    }
+}
+
+async function deleteTask(id) {
+    try {
+        const response = await fetch(`${API_BASE}/todos/${id}`, {
+            method: "DELETE"
+        });
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        return response.ok;
+    } catch (error) {
+        console.error("Failed to delete task:", error);
+        return false;
+    }
+}
+
+async function toggleTask(id) {
+    try {
+        const response = await fetch(`${API_BASE}/todos/${id}/toggle`, {
+            method: "PATCH"
+        });
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        return response.ok;
+    } catch (error) {
+        console.error("Failed to toggle task:", error);
+        return false;
+    }
+}
+
 window.api = {
-    getSystemInfo
+    getSystemInfo,
+    getTasks,
+    addTask,
+    deleteTask,
+    toggleTask
 };
