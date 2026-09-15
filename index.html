@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <header class="dashboard-header">
+        <h1>Homepage</h1>
+        <div id="stats-widget" class="dashboard-header-widget"></div>
+        <div id="weather-widget" class="dashboard-header-widget"></div>
+    </header>
+
+    <main class="dashboard-grid">
+        <section id="docker-apps" class="card">
+            <h2>Services</h2>
+            <div id="services-container" class="apps-grid"></div>
+        </section>
+
+        <section id="todo-list" class="card">
+            <h2>Tasks</h2>
+            <ul id="tasks-container"></ul>
+            <form id="add-task-form">
+                <input type="text" id="new-task" placeholder="Add new task">
+                <button type="submit">Add</button>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>
