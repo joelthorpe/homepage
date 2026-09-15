@@ -9,7 +9,7 @@ const TODOS_FILE = path.join(__dirname, "data/todos.json");
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "..")));
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 // Docs: https://www.npmjs.com/package/systeminformation
 app.get("/api/system-info", async (req, res) => {
