@@ -225,11 +225,9 @@ body {
     color: var(--text-muted);
 }
 
-
 .weather-location-text {
     font-weight: bold;
     font-size: 1.25rem;
-    cursor: pointer;
 }
 
 .weather-temp {

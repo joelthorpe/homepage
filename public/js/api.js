@@ -76,7 +76,7 @@ async function getWeather(city = "London") {
 
 async function getWeatherCodes() {
     try {
-        const response = await fetch('/data/wmo_codes.json');
+        const response = await fetch("/data/wmo_codes.json");
         if (!response.ok) throw new Error(`Fetch error: ${response.status}`);
         return await response.json();
     } catch (error) {

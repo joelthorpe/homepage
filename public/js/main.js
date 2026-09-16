@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     async function init() {
-        await updateSystemStats();
-        await updateTasks();
-        await updateWeather();
-        await updateServices();
+        await Promise.all([
+            updateSystemStats(),
+            updateTasks(),
+            updateWeather(),
+            updateServices()
+        ]);
+
         setInterval(updateSystemStats, 5000);
         setInterval(updateWeather, 1800000);
         setInterval(updateServices, 300000);
@@ -56,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             input.value = "";
-            updateTasks();
+            await updateTasks();
         }
     });
 
@@ -66,24 +69,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (e.target.classList.contains("delete-btn")) {
             const id = taskEl.dataset.id;
-            const task = await window.api.deleteTask(id);
+            const deleted = await window.api.deleteTask(id);
 
-            if (!task) {
+            if (!deleted) {
                 console.error("Failed to delete task");
                 return;
             }
 
-            updateTasks();
+            await updateTasks();
         } else if (e.target.classList.contains("task-text") || e.target.classList.contains("toggle-checkbox")) {
             const id = taskEl.dataset.id;
-            const task = await window.api.toggleTask(id);
+            const toggled = await window.api.toggleTask(id);
 
-            if (!task) {
+            if (!toggled) {
                 console.error("Failed to toggle task");
                 return;
             }
 
-            updateTasks();
+            await updateTasks();
         }
     });
 

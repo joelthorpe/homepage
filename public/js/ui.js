@@ -45,7 +45,7 @@ function renderSystemStats(stats) {
     container.innerHTML = `
         ${createProgressRow("CPU Load", cpuLoad, `${cpuLoad.toFixed(1)}%`)}
         ${createProgressRow("Memory", memPercent, `${memUsed.toFixed(1)}GB / ${memTotal.toFixed(1)}GB`)}
-        ${createProgressRow("Network", netStatus, `${netRx.toFixed(1)}MB/s | ${netTx.toFixed(1)}MB/s`)}
+        ${createInfoRow("Network", `${netStatus.toUpperCase()} | ${netRx.toFixed(1)}MB/s | ${netTx.toFixed(1)}MB/s`)}
         ${createProgressRow("Storage", storagePercent, `${storageUsed.toFixed(1)}GB / ${storageTotal.toFixed(1)}GB`)}
         ${createInfoRow("Uptime", uptime)}
     `;
@@ -240,7 +240,7 @@ function renderServices(servicesData) {
             serviceCard.rel = "noopener noreferrer";
 
             const serviceIcon = document.createElement("img");
-            serviceIcon.src = serviceInfo.icon || 'https://placehold.co/128x128';
+            serviceIcon.src = serviceInfo.icon || "https://placehold.co/128x128";
             serviceIcon.alt = serviceName;
             serviceIcon.classList.add("service-icon");
 

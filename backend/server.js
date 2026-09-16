@@ -21,13 +21,13 @@ app.get("/api/system-info", async (req, res) => {
         const disk = await si.fsSize();
 
         // TODO: Grabs the main drive for now - make this more dynamic
-        const mainDrive = disk[0] || { used: 0, size: 0, use: 0 }
+        const mainDrive = disk[0] || { used: 0, size: 0, use: 0 };
 
         const uptimeSeconds = time.uptime;
         const d = Math.floor(uptimeSeconds / (3600 * 24));
         const h = Math.floor(uptimeSeconds % (3600 * 24) / 3600);
         const m = Math.floor(uptimeSeconds % 3600 / 60);
-        const uptimeFormatted = `${d > 0 ? d + 'd ' : ''}${h > 0 ? h + 'h ' : ''}${m}m`;
+        const uptimeFormatted = `${d > 0 ? d + "d " : ""}${h > 0 ? h + "h " : ""}${m}m`;
 
         res.json({
             cpuLoad: cpu.currentLoad.toFixed(2),
@@ -35,7 +35,7 @@ app.get("/api/system-info", async (req, res) => {
             memTotal: (mem.total / 1024 / 1024 / 1024).toFixed(2),
             netRx: ((net[0]?.rx_sec || 0) / 1024 / 1024).toFixed(2),
             netTx: ((net[0]?.tx_sec || 0) / 1024 / 1024).toFixed(2),
-            netStatus: net[0]?.operstate || 'unknown',
+            netStatus: net[0]?.operstate || "unknown",
             storageUsed: (mainDrive.used / 1024 / 1024 / 1024).toFixed(2),
             storageTotal: (mainDrive.size / 1024 / 1024 / 1024).toFixed(2),
             storagePercent: mainDrive.use.toFixed(2),
@@ -150,7 +150,7 @@ app.get("/api/weather", async (req, res) => {
         console.error("Error fetching weather info:", error);
         res.status(500).json({ error: "Failed to fetch weather info" });
     }
-})
+});
 
 app.get("/api/services", (req, res) => {
     try {
@@ -160,7 +160,7 @@ app.get("/api/services", (req, res) => {
         const data = fs.readFileSync(SERVICES_FILE, "utf8");
         const services = yaml.load(data);
 
-        if (services == null) {
+        if (services === null || services === undefined) {
             return res.json([]);
         }
 
@@ -173,7 +173,7 @@ app.get("/api/services", (req, res) => {
         console.error("Failed to parse services.yaml:", error);
         res.status(500).json({ error: "Failed to fetch services info" });
     }
-})
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
