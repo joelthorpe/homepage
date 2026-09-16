@@ -1,0 +1,13 @@
+- Example Header:
+    - Example Service 1:
+        icon: https://placehold.co/128x128
+        href: https://127.0.0.1:9000
+        description: Example Description
+        server: local-docker
+        container: example-container
+    - Example Service 2:
+        icon: https://placehold.co/128x128
+        href: https://127.0.0.1:9001
+        description: Example Description
+        server: local-docker
+        container: example-container

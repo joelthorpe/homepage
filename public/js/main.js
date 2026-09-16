@@ -3,8 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
         await updateSystemStats();
         await updateTasks();
         await updateWeather();
+        await updateServices();
         setInterval(updateSystemStats, 5000);
         setInterval(updateWeather, 1800000);
+        setInterval(updateServices, 300000);
     }
 
     function getCity() {
@@ -36,6 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.ui.renderWeather(weather, city, weatherCodes);
     }
 
+    async function updateServices() {
+        const services = await window.api.getServices();
+        window.ui.renderServices(services);
+    }
 
     document.getElementById("add-task-form").addEventListener("submit", async (e) => {
         e.preventDefault();

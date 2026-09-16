@@ -196,8 +196,81 @@ function renderWeather(weather, city, mapping) {
     container.replaceChildren(locationDisplay, locationForm, details);
 }
 
+function renderServices(servicesData) {
+    const container = document.getElementById("services-container");
+    container.replaceChildren();
+
+    if (!Array.isArray(servicesData) || servicesData.length === 0) {
+        const message = document.createElement("p");
+        message.textContent = "No services configured";
+        message.classList.add("empty-message");
+        container.appendChild(message);
+        return;
+    }
+
+    servicesData.forEach(categoryObj => {
+        if (!categoryObj || typeof categoryObj !== "object") return;
+        const categoryName = Object.keys(categoryObj)[0];
+        const categoryServices = categoryObj[categoryName];
+
+        if (!categoryName || !Array.isArray(categoryServices)) return;
+
+        const categorySection = document.createElement("div");
+        categorySection.classList.add("service-category");
+
+        const categoryTitle = document.createElement("h3");
+        categoryTitle.className = "category-title";
+        categoryTitle.textContent = categoryName;
+        categorySection.appendChild(categoryTitle);
+
+        const categoryGrid = document.createElement("div");
+        categoryGrid.className = "service-grid";
+
+        categoryServices.forEach(service => {
+            if (!service || typeof service !== "object") return;
+            const serviceName = Object.keys(service)[0];
+            const serviceInfo = service[serviceName];
+
+            if (!serviceName || !serviceInfo || typeof serviceInfo !== "object") return;
+
+            const serviceCard = document.createElement("a");
+            serviceCard.className = "service-card";
+            serviceCard.href = serviceInfo.href;
+            serviceCard.target = "_blank";
+            serviceCard.rel = "noopener noreferrer";
+
+            const serviceIcon = document.createElement("img");
+            serviceIcon.src = serviceInfo.icon || 'https://placehold.co/128x128';
+            serviceIcon.alt = serviceName;
+            serviceIcon.classList.add("service-icon");
+
+            const textContainer = document.createElement("div");
+            textContainer.className = "service-text";
+
+            const nameEl = document.createElement("div");
+            nameEl.textContent = serviceName;
+            nameEl.className = "service-name";
+
+            const descEl = document.createElement("div");
+            descEl.textContent = serviceInfo.description || serviceInfo.container || "";
+            descEl.className = "service-label";
+
+            textContainer.appendChild(nameEl);
+            textContainer.appendChild(descEl);
+
+            serviceCard.appendChild(serviceIcon);
+            serviceCard.appendChild(textContainer);
+            categoryGrid.appendChild(serviceCard);
+        });
+
+        categorySection.appendChild(categoryGrid);
+        container.appendChild(categorySection);
+    });
+}
+
 window.ui = {
     renderSystemStats,
     renderTasks,
-    renderWeather
+    renderWeather,
+    renderServices
 };

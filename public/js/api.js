@@ -85,6 +85,17 @@ async function getWeatherCodes() {
     }
 }
 
+async function getServices() {
+    try {
+        const response = await fetch(`${API_BASE}/services`);
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to fetch services:", error);
+        return null;
+    }
+}
+
 window.api = {
     getSystemInfo,
     getTasks,
@@ -92,5 +103,6 @@ window.api = {
     deleteTask,
     toggleTask,
     getWeather,
-    getWeatherCodes
+    getWeatherCodes,
+    getServices
 };

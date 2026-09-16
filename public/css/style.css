@@ -244,6 +244,88 @@ body {
     color: var(--text-muted);
 }
 
+/* Services */
+.apps-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.service-category {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.category-title {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 0.5rem;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.service-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-main);
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    background: var(--surface-color);
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.service-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.service-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.service-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.1rem;
+}
+
+.service-text {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+}
+
+.service-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.empty-message {
+    color: var(--text-muted);
+}
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr;

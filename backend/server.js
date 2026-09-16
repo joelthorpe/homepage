@@ -2,8 +2,10 @@ const express = require("express");
 const si = require("systeminformation");
 const fs = require("fs");
 const path = require("path");
+const yaml = require("js-yaml");
 const app = express();
 const PORT = 8080;
+const SERVICES_FILE = path.join(__dirname, "data/services.yaml");
 const TODOS_FILE = path.join(__dirname, "data/todos.json");
 
 app.use(express.json());
@@ -147,6 +149,29 @@ app.get("/api/weather", async (req, res) => {
     } catch (error) {
         console.error("Error fetching weather info:", error);
         res.status(500).json({ error: "Failed to fetch weather info" });
+    }
+})
+
+app.get("/api/services", (req, res) => {
+    try {
+        if (!fs.existsSync(SERVICES_FILE)) {
+            return res.json([]);
+        }
+        const data = fs.readFileSync(SERVICES_FILE, "utf8");
+        const services = yaml.load(data);
+
+        if (services == null) {
+            return res.json([]);
+        }
+
+        if (!Array.isArray(services)) {
+            return res.status(500).json({ error: "Invalid services.yaml structure" });
+        }
+
+        res.json(services);
+    } catch (error) {
+        console.error("Failed to parse services.yaml:", error);
+        res.status(500).json({ error: "Failed to fetch services info" });
     }
 })
 
