@@ -1,0 +1,11 @@
+services:
+  homepage:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: homepage
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../backend/data:/app/backend/data
