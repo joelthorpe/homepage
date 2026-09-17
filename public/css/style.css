@@ -324,6 +324,48 @@ body {
     color: var(--text-muted);
 }
 
+/* Service Statuses */
+
+.service-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--text-muted);
+}
+
+.service-status-healthy .status-dot,
+.service-status-running .status-dot {
+    background-color: #28a745;
+}
+
+.service-status-starting .status-dot,
+.service-status-restarting .status-dot,
+.service-status-paused .status-dot {
+    background-color: #ffc107;
+}
+
+.service-status-exited .status-dot,
+.service-status-unhealthy .status-dot,
+.service-status-dead .status-dot {
+    background-color: #dc3545;
+}
+
+.service-status-not-found .status-dot,
+.service-status-unknown .status-dot,
+.service-status-unavailable .status-dot {
+    background-color: #6c757d;
+}
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr;

@@ -9,3 +9,4 @@ services:
       - "8080:8080"
     volumes:
       - ../backend/data:/app/backend/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro

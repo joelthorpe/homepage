@@ -3,10 +3,13 @@ const si = require("systeminformation");
 const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
+const Docker = require("dockerode");
 const app = express();
 const PORT = 8080;
 const SERVICES_FILE = path.join(__dirname, "data/services.yaml");
 const TODOS_FILE = path.join(__dirname, "data/todos.json");
+
+const docker = new Docker({ socketPath: "/var/run/docker.sock" });
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..", "public")));
@@ -152,7 +155,58 @@ app.get("/api/weather", async (req, res) => {
     }
 });
 
-app.get("/api/services", (req, res) => {
+async function getContainerStatus(containerName) {
+    if (!containerName) {
+        return "unknown";
+    }
+
+    try {
+        const container = docker.getContainer(containerName);
+        const info = await container.inspect();
+
+        if (info.State.Health?.Status) {
+            return info.State.Health.Status;
+        }
+
+        return info.State.Status || "unknown";
+    } catch (error) {
+        if (error.statusCode === 404) {
+            return "not-found";
+        }
+
+        console.error(`Error fetching container status for ${containerName}:`, error);
+        return "unavailable";
+    }
+}
+
+async function addServiceStatuses(services) {
+    return Promise.all(services.map(async categoryObj => {
+        const categoryName = Object.keys(categoryObj)[0];
+        const categoryServices = categoryObj[categoryName];
+
+        const servicesWithStatuses = await Promise.all(
+            categoryServices.map(async service => {
+                const serviceName = Object.keys(service)[0];
+                const serviceInfo = service[serviceName];
+
+                const status = serviceInfo.server === "local-docker" ? await getContainerStatus(serviceInfo.container) : "unknown";
+
+                return {
+                    [serviceName]: {
+                        ...serviceInfo,
+                        status
+                    }
+                };
+            })
+        );
+
+        return {
+            [categoryName]: servicesWithStatuses
+        };
+    }));
+}
+
+app.get("/api/services", async (req, res) => {
     try {
         if (!fs.existsSync(SERVICES_FILE)) {
             return res.json([]);
@@ -168,7 +222,8 @@ app.get("/api/services", (req, res) => {
             return res.status(500).json({ error: "Invalid services.yaml structure" });
         }
 
-        res.json(services);
+        const servicesWithStatuses = await addServiceStatuses(services);
+        res.json(servicesWithStatuses);
     } catch (error) {
         console.error("Failed to parse services.yaml:", error);
         res.status(500).json({ error: "Failed to fetch services info" });

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setInterval(updateSystemStats, 5000);
         setInterval(updateWeather, 1800000);
-        setInterval(updateServices, 300000);
+        setInterval(updateServices, 30000);
     }
 
     function getCity() {

@@ -255,11 +255,37 @@ function renderServices(servicesData) {
             descEl.textContent = serviceInfo.description || serviceInfo.container || "";
             descEl.className = "service-label";
 
-            textContainer.appendChild(nameEl);
-            textContainer.appendChild(descEl);
+            // Docs: https://docs.docker.com/reference/api/engine/version/v1.46/#tag/Container/operation/ContainerList
+            // https://docs.docker.com/engine/containers/run/#healthchecks
+            const knownStatuses = [
+                "healthy",
+                "unhealthy",
+                "starting",
+                "running",
+                "restarting",
+                "paused",
+                "exited",
+                "dead",
+                "not-found",
+                "unavailable"
+            ];
 
-            serviceCard.appendChild(serviceIcon);
-            serviceCard.appendChild(textContainer);
+            const status = knownStatuses.includes(serviceInfo.status) ? serviceInfo.status : "unknown";
+
+            const statusEl = document.createElement("div");
+            statusEl.classList.add("service-status", `service-status-${status}`);
+
+            const statusDot = document.createElement("span");
+            statusDot.classList.add("status-dot");
+
+            const statusText = document.createElement("span");
+            statusText.textContent = status.replace("-", " ");
+
+            statusEl.append(statusDot, statusText);
+
+            textContainer.append(nameEl, descEl);
+            serviceCard.append(serviceIcon, textContainer, statusEl);
+
             categoryGrid.appendChild(serviceCard);
         });
 
