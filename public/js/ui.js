@@ -235,7 +235,15 @@ function renderServices(servicesData) {
 
             const serviceCard = document.createElement("a");
             serviceCard.className = "service-card";
-            serviceCard.href = serviceInfo.href;
+
+            let targetHref = serviceInfo.href || "#";
+            if (targetHref.startsWith(":")) {
+                targetHref = window.location.protocol + "//" + window.location.hostname + targetHref;
+            } else if (targetHref.startsWith("http://:") || targetHref.startsWith("https://:")) {
+                const parts = targetHref.split("://:");
+                targetHref = parts[0] + "://" + window.location.hostname + ":" + parts[1];
+            }
+            serviceCard.href = targetHref;
             serviceCard.target = "_blank";
             serviceCard.rel = "noopener noreferrer";
 
