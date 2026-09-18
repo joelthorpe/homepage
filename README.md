@@ -10,6 +10,7 @@ A Node.js and Vanilla JavaScript web application for monitoring server system me
 * **Data Persistence:** Automatically save and load tasks using a JSON file.
 * **Configure Services:** Define categorised service shortcuts in a YAML file without changing the frontend code.
 * **Monitor Services:** Display Docker container and health states on configured service cards.
+* **Display Service Metrics:** Fetch and display selected API values on individual service cards.
 * **Docker Deployment:** Build and run the application using Docker Compose.
 
 ## Concepts Demonstrated
@@ -90,7 +91,7 @@ server-homepage/
 The Docker socket is mounted into the application container so that Dockerode can request container states from the Docker Engine API. Access to this socket is privileged and should only be provided to trusted containers.
 
 ## Configuring Services
-Services are configured in `backend/data/services.yaml`. Each category contains one or more services with a name, icon, address, description, server, and container value:
+Services are configured in `backend/data/services.yaml`. Each category contains one or more services with a name, icon, address, description, server, and container value. Services can also include an optional widget configuration for displaying values from an API:
 
 ```yaml
 - Media:
@@ -100,11 +101,24 @@ Services are configured in `backend/data/services.yaml`. Each category contains 
         description: Example Description
         server: local-docker
         container: example-container
+        widget:
+            type: example-widget
+            url: http://[IP_ADDRESS]:[PORT]/api/endpoint
+            key: "[API_KEY]"
+            fields:
+                - label: "Example Stat 1"
+                  path: "example.value_one"
+                - label: "Example Stat 2"
+                  path: "example.value_two"
 ```
 
 Setting `server` to `local-docker` allows the backend to inspect the named container and display its current state. If the container provides a Docker health check, its health state is displayed instead. Service states are refreshed every 30 seconds.
 
 Service links can use a complete URL or the current dashboard hostname. For example, `:9000` uses the dashboard protocol and hostname, while `http://:9000` and `https://:9000` use the selected protocol with the current hostname. This allows the same configuration to work when the dashboard is accessed from a different device or address.
+
+The widget `url` defines the API endpoint requested by the backend. The optional `key` value is sent using the `X-API-Key` header, while custom headers can be provided using a `headers` object. Each field contains a label and a path to the required value in the returned JSON. Nested values can be selected using dot notation, such as `example.value_one`.
+
+Widget API keys and headers are used only by the backend and are not included in the service data returned to the browser.
 
 Changes to this file are loaded automatically when the dashboard refreshes its service list.
 
@@ -115,4 +129,5 @@ Changes to this file are loaded automatically when the dashboard refreshes its s
 - [x] Add editable weather location
 - [x] Generate service shortcuts from a YAML configuration file
 - [x] Display Docker container and health states for configured services
-- [ ] Add metric widgets to configured services
+- [x] Add metric widgets to configured services
+- [ ] Load widget credentials from environment variables
