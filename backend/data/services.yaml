@@ -5,9 +5,27 @@
         description: Example Description
         server: local-docker
         container: example-container
+        widget:
+            type: example-widget
+            url: http://[IP_ADDRESS]:[PORT]/api/endpoint
+            key: "[API_KEY]"
+            fields:
+                - label: "Example Stat 1"
+                  path: "example.value_one"
+                - label: "Example Stat 2"
+                  path: "example.value_two"
     - Example Service 2:
         icon: https://placehold.co/128x128
         href: https://[IP_ADDRESS]:[PORT]
         description: Example Description
         server: local-docker
         container: example-container
+        widget:
+            type: example-widget
+            url: http://[IP_ADDRESS]:[PORT]/api/endpoint
+            key: "[API_KEY]"
+            fields:
+                - label: "Example Stat 1"
+                  path: "example.value_one"
+                - label: "Example Stat 2"
+                  path: "example.value_two"

@@ -247,6 +247,9 @@ function renderServices(servicesData) {
             serviceCard.target = "_blank";
             serviceCard.rel = "noopener noreferrer";
 
+            const cardTop = document.createElement("div");
+            cardTop.className = "service-card-top";
+
             const serviceIcon = document.createElement("img");
             serviceIcon.src = serviceInfo.icon || "https://placehold.co/128x128";
             serviceIcon.alt = serviceName;
@@ -292,7 +295,31 @@ function renderServices(servicesData) {
             statusEl.append(statusDot, statusText);
 
             textContainer.append(nameEl, descEl);
-            serviceCard.append(serviceIcon, textContainer, statusEl);
+            cardTop.append(serviceIcon, textContainer, statusEl);
+            serviceCard.append(cardTop);
+
+            if (Array.isArray(serviceInfo.widgetData) && serviceInfo.widgetData.length > 0) {
+                const widgetContainer = document.createElement("div");
+                widgetContainer.classList.add("service-widget-data");
+
+                serviceInfo.widgetData.forEach(stat => {
+                    const statRow = document.createElement("div");
+                    statRow.className = "widget-stat-row";
+
+                    const statLabel = document.createElement("span");
+                    statLabel.className = "widget-stat-label";
+                    statLabel.textContent = stat.label;
+
+                    const statValue = document.createElement("span");
+                    statValue.className = "widget-stat-value";
+                    statValue.textContent = stat.value;
+
+                    statRow.append(statLabel, statValue);
+                    widgetContainer.appendChild(statRow);
+                });
+
+                serviceCard.appendChild(widgetContainer);
+            }
 
             categoryGrid.appendChild(serviceCard);
         });

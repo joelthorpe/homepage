@@ -272,7 +272,7 @@ body {
 
 .service-card {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     text-decoration: none;
     color: var(--text-main);
@@ -364,6 +364,43 @@ body {
 .service-status-unknown .status-dot,
 .service-status-unavailable .status-dot {
     background-color: #6c757d;
+}
+
+.service-card-top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.service-widget-data {
+    display: flex;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    justify-content: space-around;
+    gap: 0.4rem;
+}
+
+.widget-stat-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+}
+
+.widget-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.widget-stat-value {
+    font-size: 0.75rem;
+    color: var(--text-main);
+    font-weight: bold;
 }
 
 .dashboard-grid {

@@ -179,6 +179,50 @@ async function getContainerStatus(containerName) {
     }
 }
 
+function resolvePath(obj, path) {
+    if (!path) return undefined;
+    const keys = path.split(".");
+    let current = obj;
+    for (const key of keys) {
+        if (current === null || current === undefined) return undefined;
+        current = current[key];
+    }
+    return current;
+}
+
+async function getWidgetData(widgetConfig) {
+    if (!widgetConfig || !widgetConfig.url || !widgetConfig.fields) return null;
+
+    const headers = {};
+    if (widgetConfig.key) {
+        headers["X-API-Key"] = widgetConfig.key;
+    }
+    if (widgetConfig.headers) {
+        Object.assign(headers, widgetConfig.headers);
+    }
+
+    try {
+        const response = await fetch(widgetConfig.url, {
+            method: "GET",
+            headers
+        });
+
+        if (!response.ok) return null;
+
+        const rawJson = await response.json();
+
+        return widgetConfig.fields.map(field => {
+            return {
+                label: field.label,
+                value: resolvePath(rawJson, field.path) ?? "N/A"
+            };
+        });
+    } catch (error) {
+        console.error(`Error fetching widget data for ${widgetConfig.url}:`, error);
+        return null;
+    }
+}
+
 async function addServiceStatuses(services) {
     return Promise.all(services.map(async categoryObj => {
         const categoryName = Object.keys(categoryObj)[0];
@@ -191,10 +235,14 @@ async function addServiceStatuses(services) {
 
                 const status = serviceInfo.server === "local-docker" ? await getContainerStatus(serviceInfo.container) : "unknown";
 
+                const { widget, ...publicServiceInfo } = serviceInfo;
+                const widgetData = widget ? await getWidgetData(widget) : null;
+
                 return {
                     [serviceName]: {
-                        ...serviceInfo,
-                        status
+                        ...publicServiceInfo,
+                        status,
+                        widgetData
                     }
                 };
             })
