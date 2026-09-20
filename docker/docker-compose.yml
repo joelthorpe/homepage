@@ -7,6 +7,8 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
+    env_file:
+      - ../.env
     volumes:
       - ../backend/data:/app/backend/data
       - /var/run/docker.sock:/var/run/docker.sock:ro

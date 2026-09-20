@@ -8,7 +8,7 @@
         widget:
             type: example-widget
             url: http://[IP_ADDRESS]:[PORT]/api/endpoint
-            key: "[API_KEY]"
+            keyEnv: EXAMPLE_API_KEY
             fields:
                 - label: "Example Stat 1"
                   path: "example.value_one"
@@ -23,7 +23,7 @@
         widget:
             type: example-widget
             url: http://[IP_ADDRESS]:[PORT]/api/endpoint
-            key: "[API_KEY]"
+            keyEnv: EXAMPLE_API_KEY
             fields:
                 - label: "Example Stat 1"
                   path: "example.value_one"

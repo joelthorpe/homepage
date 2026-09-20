@@ -194,8 +194,15 @@ async function getWidgetData(widgetConfig) {
     if (!widgetConfig || !widgetConfig.url || !widgetConfig.fields) return null;
 
     const headers = {};
-    if (widgetConfig.key) {
-        headers["X-API-Key"] = widgetConfig.key;
+    if (widgetConfig.keyEnv) {
+        const apiKey = process.env[widgetConfig.keyEnv];
+
+        if (!apiKey) {
+            console.error(`Missing environment variable: ${widgetConfig.keyEnv}`);
+            return null;
+        }
+
+        headers["X-API-Key"] = apiKey;
     }
     if (widgetConfig.headers) {
         Object.assign(headers, widgetConfig.headers);

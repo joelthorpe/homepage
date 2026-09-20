@@ -77,16 +77,19 @@ server-homepage/
 ## How to Run
 ### Using Node.js
 1. Clone this repository.
-2. Open a terminal and navigate to the `backend/` directory.
-3. Run `npm install` to install dependencies.
-4. Run `npm start` to start the backend server.
-5. Open your browser and navigate to `http://localhost:8080`.
+2. Open a terminal and navigate to the project directory.
+3. Copy `.env.example` to `.env` and add the required widget API keys.
+4. Navigate to the `backend/` directory.
+5. Run `npm install` to install dependencies.
+6. Run `node --env-file=../.env server.js` to start the backend server.
+7. Open your browser and navigate to `http://localhost:8080`.
 
 ### Using Docker Compose
 1. Clone this repository.
 2. Open a terminal and navigate to the project directory.
-3. Run `docker compose -f docker/docker-compose.yml up -d --build`.
-4. Open your browser and navigate to `http://localhost:8080`.
+3. Copy `.env.example` to `.env` and add the required widget API keys.
+4. Run `docker compose -f docker/docker-compose.yml up -d --build`.
+5. Open your browser and navigate to `http://localhost:8080`.
 
 The Docker socket is mounted into the application container so that Dockerode can request container states from the Docker Engine API. Access to this socket is privileged and should only be provided to trusted containers.
 
@@ -104,7 +107,7 @@ Services are configured in `backend/data/services.yaml`. Each category contains 
         widget:
             type: example-widget
             url: http://[IP_ADDRESS]:[PORT]/api/endpoint
-            key: "[API_KEY]"
+            keyEnv: EXAMPLE_API_KEY
             fields:
                 - label: "Example Stat 1"
                   path: "example.value_one"
@@ -116,7 +119,7 @@ Setting `server` to `local-docker` allows the backend to inspect the named conta
 
 Service links can use a complete URL or the current dashboard hostname. For example, `:9000` uses the dashboard protocol and hostname, while `http://:9000` and `https://:9000` use the selected protocol with the current hostname. This allows the same configuration to work when the dashboard is accessed from a different device or address.
 
-The widget `url` defines the API endpoint requested by the backend. The optional `key` value is sent using the `X-API-Key` header, while custom headers can be provided using a `headers` object. Each field contains a label and a path to the required value in the returned JSON. Nested values can be selected using dot notation, such as `example.value_one`.
+The widget `url` defines the API endpoint requested by the backend. The optional `keyEnv` value defines the environment variable containing the API key, which is sent using the `X-API-Key` header. Custom headers can be provided using a `headers` object. Each field contains a label and a path to the required value in the returned JSON. Nested values can be selected using dot notation, such as `example.value_one`.
 
 Widget API keys and headers are used only by the backend and are not included in the service data returned to the browser.
 
@@ -130,4 +133,4 @@ Changes to this file are loaded automatically when the dashboard refreshes its s
 - [x] Generate service shortcuts from a YAML configuration file
 - [x] Display Docker container and health states for configured services
 - [x] Add metric widgets to configured services
-- [ ] Load widget credentials from environment variables
+- [x] Load widget credentials from environment variables
